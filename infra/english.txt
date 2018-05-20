@@ -1,0 +1,15 @@
+# Databases
+redis
+mysql
+
+# Amazon Web Services
+rds
+sns
+sqs
+
+# Other
+cache
+auth
+login
+vpn
+
