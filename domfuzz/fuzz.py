@@ -6,14 +6,14 @@ class KeyboardFuzzer():
         'qwerty': {
             '1': '2q',   '2': '3wq1',   '3': '4ew2',   '4': '5re3',   '5': '6tr4',   '6': '7yt5',   '7': '8uy6',   '8': '9iu7',   '9': '0oi8',   '0': 'po9',
             'q': '12wa', 'w': '23esaq', 'e': '34rdsw', 'r': '45tfde', 't': '56ygfr', 'y': '67uhgt', 'u': '78ijhy', 'i': '89okju', 'o': '90plki', 'p': '0lo',
-            'a': 'qwsz', 's': 'wedxza', 'd': 'erfcxs', 'f': 'rtgvcd', 'g': 'tyhbvf', 'h': 'yujnbg', 'j': 'uikmnh', 'k': 'iolmj',  'l': 'opk',
-            'z': 'asx',  'x': 'sdcz',   'c': 'dfvx',   'v': 'fgbc',   'b': 'ghnv',   'n': 'hjmn',   'm': 'jkn'
+            'a': 'qwsz', 's': 'wedxza', 'd': 'erfcxs', 'f': 'rtgvcd', 'g': 'tyhbvf', 'h': 'yujnbg', 'j': 'uikmnh', 'k': 'iol,mj',  'l': 'op.,k',
+            'z': 'asx',  'x': 'sdcz',   'c': 'dfvx',   'v': 'fgbc',   'b': 'ghnv',   'n': 'hjmn',   'm': 'jk,n'
             },
         'qwertz': {
             '1': '2q',   '2': '3wq1',   '3': '4ew2',   '4': '5re3',   '5': '6tr4',   '6': '7zt5',   '7': '8uz6',   '8': '9iu7',   '9': '0oi8',   '0': 'po9',
             'q': '12wa', 'w': '23esaq', 'e': '34rdsw', 'r': '45tfde', 't': '56zgfr', 'z': '67uhgt', 'u': '78ijhz', 'i': '89okju', 'o': '90plki', 'p': '0lo',
-            'a': 'qwsy', 's': 'wedxya', 'd': 'erfcxs', 'f': 'rtgvcd', 'g': 'tzhbvf', 'h': 'zujnbg', 'j': 'uikmnh', 'k': 'iolmj',  'l': 'opk',
-            'y': 'asx',  'x': 'sdcy',   'c': 'dfvx',   'v': 'fgbc',   'b': 'ghnv',   'n': 'hjmn',   'm': 'jkn'
+            'a': 'qwsy', 's': 'wedxya', 'd': 'erfcxs', 'f': 'rtgvcd', 'g': 'tzhbvf', 'h': 'zujnbg', 'j': 'uikmnh', 'k': 'iol,mj',  'l': 'op.,k',
+            'y': 'asx',  'x': 'sdcy',   'c': 'dfvx',   'v': 'fgbc',   'b': 'ghnv',   'n': 'hjmn',   'm': 'jk,n'
             },
         'azerty': {
             '1': '2a',   '2': '3za1',   '3': '4ez2',   '4': '5re3',   '5': '6tr4',   '6': '7yt5',   '7': '8uy6',   '8': '9iu7',   '9': '0oi8',   '0': 'po9',
@@ -46,7 +46,6 @@ class KeyboardFuzzer():
 
     def __replacement(self, text):
         """Generate all permutations of one misplaced key stroke."""
-        # TODO Account for duplicate characters (tt, ll, ss, ...)
         result = set()
 
         for layout in self.fuzz_layouts:
@@ -54,6 +53,7 @@ class KeyboardFuzzer():
                 if text[i] not in self.layout[layout]:
                     continue
                 for c in self.layout[layout][text[i]]:
+                    # TODO Consider duplicate characters (tt, ll, ss, ...)
                     result.add(text[:i] + c + text[i+1:])
 
         return result
@@ -174,19 +174,24 @@ class NoiseFuzzer():
         return list(result)
 
 def main():
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Generate text permutations')
+    parser.add_argument('text', type=str)
+    args = vars(parser.parse_args())
+
     kbd = KeyboardFuzzer(['qwerty', 'qwertz', 'azerty'])
-    noise = NoiseFuzzer()
     lang = LangFuzzer()
+    noise = NoiseFuzzer()
 
     result = set()
-    word = 'test-123'
+    word = args['text']
     result.update(kbd.fuzz(word))
     result.update(lang.fuzz(word))
     result.update(noise.fuzz(word))
 
     for r in result:
-        print(r.encode('utf-8'))
-        #print(r.encode('idna'))
+        print("{}\t{}".format(r.encode('utf-8'), r.encode('idna')))
 
 
 if __name__ == '__main__':
