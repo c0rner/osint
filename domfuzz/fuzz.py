@@ -191,7 +191,7 @@ def main():
     result.update(noise.fuzz(word))
 
     for r in result:
-        print("{}\t{}".format(r.encode('utf-8'), r.encode('idna')))
+        print(r.encode('utf-8'))
 
 
 if __name__ == '__main__':
