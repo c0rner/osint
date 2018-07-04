@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 def main():
@@ -12,13 +13,12 @@ def main():
 
     result = set()
     word = args['text']
-    result.update(keyboard.fuzz(word))
-    result.update(language.fuzz(word))
-    result.update(noise.fuzz(word))
+    result.update(keyboard.complete(word))
+    result.update(language.complete(word))
+    result.update(noise.complete(word))
 
     for r in result:
         print(r.encode('utf-8'))
-
 
 if __name__ == '__main__':
     main()

@@ -58,7 +58,7 @@ def replacement(text, layouts=keyboard.keys()):
 
     return result
 
-def fuzz(text):
+def complete(text):
     """Return all keyboard fuzzing permutations of 'text'"""
     result = set()
     text = text.lower()

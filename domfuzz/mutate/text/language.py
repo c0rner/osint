@@ -38,7 +38,7 @@ def vowelswap(text):
             result.add(text[:i] + vowel + text[i+1:])
     return result
 
-def fuzz(text):
+def complete(text):
     result = set()
     result.update(homograph(text))
     result.update(hyphenation(text))

@@ -46,12 +46,22 @@ def repetition(text):
 
     return result
 
-def fuzz(text):
+def transposition(text):
+    """Generate all permutations of swapped characters."""
+    result = set()
+
+    for i in range(0, len(text) - 1):
+        result.add(text[:i] + text[i+1] + text[i] + text[i+2:])
+ 
+    return result
+
+def complete(text):
     result = set()
     result.update(append(text))
     result.update(bitflip(text))
     result.update(omission(text))
     result.update(prepend(text))
     result.update(repetition(text))
+    result.update(transposition(text))
 
     return result
