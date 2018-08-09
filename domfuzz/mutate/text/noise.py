@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 def append(text):
+    """append a character"""
     result = set()
 
     for i in range(ord('a'), ord('z') + 1):
@@ -10,7 +11,7 @@ def append(text):
     return result
 
 def bitflip(text):
-    """Generate all permutations of one bit flipped character."""
+    """one bit flipped character"""
     result = set()
     for i in range(0, len(text)):
         for bit in [ 1, 2, 4, 8, 16, 64, 128 ]:
@@ -21,7 +22,7 @@ def bitflip(text):
     return result
 
 def omission(text):
-    """Generate all permutations of one missing character."""
+    """omit a character"""
     result = set()
 
     for i in range(0, len(text)):
@@ -30,6 +31,7 @@ def omission(text):
     return result
 
 def prepend(text):
+    """prepend a character"""
     result = set()
 
     for i in range(ord('a'), ord('z') + 1):
@@ -38,7 +40,7 @@ def prepend(text):
     return result
 
 def repetition(text):
-    """Generate all permutations of a repeated character."""
+    """repeat a character once"""
     result = set()
 
     for i in range(0, len(text)):
@@ -47,7 +49,7 @@ def repetition(text):
     return result
 
 def transposition(text):
-    """Generate all permutations of swapped characters."""
+    """transpose (swap) two characters"""
     result = set()
 
     for i in range(0, len(text) - 1):

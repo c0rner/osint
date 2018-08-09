@@ -30,7 +30,7 @@ keyboard = {
     }
 
 def addition(text, layouts=keyboard.keys()):
-    """Generate all permutations of one extra key stroke (fat fingers)."""
+    """extra key stroke (fat fingers)"""
     result = set()
 
     text = text.lower()
@@ -44,8 +44,8 @@ def addition(text, layouts=keyboard.keys()):
 
     return result
 
-def replacement(text, layouts=keyboard.keys()):
-    """Generate all permutations of one misplaced key stroke."""
+def replacement(text, layouts=['qwerty', 'azerty']):
+    """replace character with adjacent key"""
     result = set()
 
     for layout in layouts:

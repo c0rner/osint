@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 def homograph(text):
-    """permutations of one homoglyph character"""
+    """replace character with homoglyph"""
     result = set()
     homoglyphs = {
             'alnum': { '0': 'o', '1': ['i', 'l'], '5': 's', 'i': ['1', 'l'], 'l': ['1', 'i'], 'o': '0', 's': '5' },
@@ -22,6 +22,7 @@ def homograph(text):
     return result
 
 def hyphenation(text):
+    """inserted hyphen"""
     result = set()
 
     for i in range(1, len(text)):
@@ -30,6 +31,7 @@ def hyphenation(text):
     return result
 
 def vowelswap(text):
+    """swap a vowel"""
     result = set()
     vowels = 'aeiou'
     for i in range(0, len(text)):
