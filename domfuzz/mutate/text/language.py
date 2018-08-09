@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 
 def homograph(text):
+    """permutations of one homoglyph character"""
     result = set()
     homoglyphs = {
-            'alnum': { '0': 'o', '1': 'l', '5': 's', 'i': ['1', 'l'], 'l': ['1', 'i'], 'o': '0', 's': '5' },
+            'alnum': { '0': 'o', '1': ['i', 'l'], '5': 's', 'i': ['1', 'l'], 'l': ['1', 'i'], 'o': '0', 's': '5' },
             'armenian': { '1': u'Լ', 'l': u'Լ' },
             'cyrillic': { 'a': u'а', 'c': u'с', 'e': u'е', 'o': u'о', 'p': u'р', 'x': u'х', 'y': u'у' },
             'greek': { '0': u'Ο', '1': u'Ι', 'c': u'ϲ', 'i': u'Ι', 'l': u'Ι', 'o': u'ο', 'p': u'ρ', 'u': u'υ', 'v': u'ν' }
