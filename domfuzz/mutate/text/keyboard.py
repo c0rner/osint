@@ -58,11 +58,4 @@ def replacement(text, layouts=['qwerty', 'azerty']):
 
     return result
 
-def complete(text):
-    """Return all keyboard fuzzing permutations of 'text'"""
-    result = set()
-    text = text.lower()
-    result.update(addition(text))
-    result.update(replacement(text))
-
-    return result
+functions = {"addition": addition, "replacement": replacement }

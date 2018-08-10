@@ -41,10 +41,4 @@ def vowelswap(text):
             result.add(text[:i] + vowel + text[i+1:])
     return result
 
-def complete(text):
-    result = set()
-    result.update(homograph(text))
-    result.update(hyphenation(text))
-    result.update(vowelswap(text))
-
-    return result
+functions = {"homograph": homograph, "hyphenation": hyphenation, "vowelswap": vowelswap }

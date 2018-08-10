@@ -57,13 +57,4 @@ def transposition(text):
  
     return result
 
-def complete(text):
-    result = set()
-    result.update(append(text))
-    result.update(bitflip(text))
-    result.update(omission(text))
-    result.update(prepend(text))
-    result.update(repetition(text))
-    result.update(transposition(text))
-
-    return result
+functions = {"append": append, "bitflip": bitflip, "omission": omission, "prepend": prepend, "repetition": repetition, "transposition": transposition }
