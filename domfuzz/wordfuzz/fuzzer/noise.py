@@ -1,60 +1,118 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-def append(text):
-    """append a character"""
+from .. import command
+
+fuzzers = {}
+
+@command.fuzzer
+def append(word):
+    """Append a-z to word
+
+    Generates all permutations of character a-z appended to `word`.
+
+    Args:
+        word: A single word
+
+    Returns:
+        A set of all possible permutations
+    """
+
     result = set()
 
     for i in range(ord('a'), ord('z') + 1):
-        result.add(text + chr(i))
+        result.add(word + chr(i))
 
     return result
 
-def bitflip(text):
-    """one bit flipped character"""
+def bitflip(word):
+    """Bitflip a character in word
+
+    Generates all permutations of a single bitflipped characer of `word`.
+
+    Args:
+        word: A single word
+
+    Returns:
+        A set of all possible permutations
+    """
     result = set()
-    for i in range(0, len(text)):
+    for i in range(0, len(word)):
         for bit in [ 1, 2, 4, 8, 16, 64, 128 ]:
-            flipped = ord(text[i]) ^ bit
+            flipped = ord(word[i]) ^ bit
             if flipped < 32 or flipped > 127:
                 continue
-            result.add(text[:i] + chr(flipped) + text[i+1:])
+            result.add(word[:i] + chr(flipped) + word[i+1:])
     return result
 
-def omission(text):
-    """omit a character"""
+def omission(word):
+    """Omit a single character in word
+
+    Generates all permutaions of a single imotted character in `word`.
+
+    Args:
+        word: A single word
+
+    Returns:
+        A set of all possible permutations
+    """
     result = set()
 
-    for i in range(0, len(text)):
-        result.add(text[:i] + text[i+1:])
+    for i in range(0, len(word)):
+        result.add(word[:i] + word[i+1:])
 
     return result
 
-def prepend(text):
-    """prepend a character"""
+def prepend(word):
+    """Prepend a-z to word
+
+    Generates all permutations of character a-z prepended to `word`.
+
+    Args:
+        word: A single word
+
+    Returns:
+        A set of all possible permutations
+    """
     result = set()
 
     for i in range(ord('a'), ord('z') + 1):
-        result.add(chr(i) + text)
+        result.add(chr(i) + word)
 
     return result
 
-def repetition(text):
-    """repeat a character once"""
+def repetition(word):
+    """Repeat a charater in word
+
+    Generates all permutations of a repeated character in `word`.
+
+    Args:
+        word: A single word
+
+    Returns:
+        A set of all possible permutations
+    """
     result = set()
 
-    for i in range(0, len(text)):
-        result.add(text[:i] + text[i] + text[i:])
+    for i in range(0, len(word)):
+        result.add(word[:i] + word[i] + word[i:])
 
     return result
 
-def transposition(text):
-    """transpose (swap) two characters"""
+def transposition(word):
+    """Transpose (swap) two characers in word
+
+    Generates all permutations of two transposed characters in `word`.
+
+    Args:
+        word: A single word
+
+    Returns:
+        A set of all possible permutations
+    """
     result = set()
 
-    for i in range(0, len(text) - 1):
-        result.add(text[:i] + text[i+1] + text[i] + text[i+2:])
+    for i in range(0, len(word) - 1):
+        result.add(word[:i] + word[i+1] + word[i] + word[i+2:])
  
     return result
-
-functions = {"append": append, "bitflip": bitflip, "omission": omission, "prepend": prepend, "repetition": repetition, "transposition": transposition }

@@ -2,7 +2,23 @@
 # -*- coding: utf-8 -*-
 
 def homograph(text):
-    """replace character with homoglyph"""
+    """Replace a character with a homoglyph
+
+    Generates all permutations of a single replaced characer of `word`
+    depending on the alphabet(s) selected.  
+
+    Please note that in modern browsers Latin, Cyrillic or Greek characters
+    cannot be mixed with each other or punycode is shown.
+
+    There is more information in the Google Chrome IDN policy:
+    https://www.chromium.org/developers/design-documents/idn-in-google-chrome
+
+    Args:
+        word: A single word
+
+    Returns:
+        A set of all possible permutations
+    """
     result = set()
     homoglyphs = {
             'alnum': { '0': 'o', '1': ['i', 'l'], '5': 's', 'i': ['1', 'l'], 'l': ['1', 'i'], 'o': '0', 's': '5' },
@@ -22,7 +38,16 @@ def homograph(text):
     return result
 
 def hyphenation(text):
-    """inserted hyphen"""
+    """Inserted hyphen
+
+    Generate all permutations of a inserted hyphen in `word`.
+
+    Args:
+        word: A single word
+
+    Returns:
+        A set of all possible permutations
+    """
     result = set()
 
     for i in range(1, len(text)):
@@ -31,7 +56,16 @@ def hyphenation(text):
     return result
 
 def vowelswap(text):
-    """swap a vowel"""
+    """Swap a vowel
+
+    Generate all permutations of a swapped vowel in `word`.
+
+    Args:
+        word: A single word
+
+    Returns:
+        A set of all possible permutations
+    """
     result = set()
     vowels = 'aeiou'
     for i in range(0, len(text)):
@@ -41,4 +75,4 @@ def vowelswap(text):
             result.add(text[:i] + vowel + text[i+1:])
     return result
 
-functions = {"homograph": homograph, "hyphenation": hyphenation, "vowelswap": vowelswap }
+fuzzers = {"homograph": homograph, "hyphenation": hyphenation, "vowelswap": vowelswap }

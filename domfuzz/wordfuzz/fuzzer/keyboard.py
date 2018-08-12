@@ -30,7 +30,19 @@ keyboard = {
     }
 
 def addition(text, layouts=keyboard.keys()):
-    """extra key stroke (fat fingers)"""
+    """Insert adjacent key
+
+    Generate all permutations of an adjacent keystroke possbible when
+    typing `word`.xi
+    This is based on the selected keyboard layout(s).
+
+    Args:
+        word: A single word
+        layouts: A list of the targeted keyboard layouts
+
+    Returns:
+        A set of all possible permutations
+    """
     result = set()
 
     text = text.lower()
@@ -45,7 +57,19 @@ def addition(text, layouts=keyboard.keys()):
     return result
 
 def replacement(text, layouts=['qwerty', 'azerty']):
-    """replace character with adjacent key"""
+    """Replace character with adjacent key
+
+    Generate all permutations of all possible adjacent key
+    strokes when typing `word`.
+    This is based on the selected keyboard layout(s).
+
+    Args:
+        word: A single word
+        layouts: A list of the targeted keyboard layouts
+
+    Returns:
+        A set of all possible permutations
+    """
     result = set()
 
     for layout in layouts:
@@ -58,4 +82,4 @@ def replacement(text, layouts=['qwerty', 'azerty']):
 
     return result
 
-functions = {"addition": addition, "replacement": replacement }
+fuzzers = {"addition": addition, "replacement": replacement }
