@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from .. import cmd
+
+@cmd.add
 def homograph(text):
     """Replace a character with a homoglyph
 
@@ -37,6 +40,7 @@ def homograph(text):
                 result.add(text[:i] + glyph + text[i+1:])
     return result
 
+@cmd.add
 def hyphenation(text):
     """Inserted hyphen
 
@@ -55,6 +59,7 @@ def hyphenation(text):
 
     return result
 
+@cmd.add
 def vowelswap(text):
     """Swap a vowel
 
@@ -74,5 +79,3 @@ def vowelswap(text):
                 continue
             result.add(text[:i] + vowel + text[i+1:])
     return result
-
-fuzzers = {"homograph": homograph, "hyphenation": hyphenation, "vowelswap": vowelswap }

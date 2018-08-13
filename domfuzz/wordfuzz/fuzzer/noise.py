@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from .. import command
+from .. import cmd
 
-fuzzers = {}
-
-@command.fuzzer
+@cmd.add
 def append(word):
     """Append a-z to word
 
@@ -25,6 +23,7 @@ def append(word):
 
     return result
 
+@cmd.add
 def bitflip(word):
     """Bitflip a character in word
 
@@ -45,6 +44,7 @@ def bitflip(word):
             result.add(word[:i] + chr(flipped) + word[i+1:])
     return result
 
+@cmd.add
 def omission(word):
     """Omit a single character in word
 
@@ -63,6 +63,7 @@ def omission(word):
 
     return result
 
+@cmd.add
 def prepend(word):
     """Prepend a-z to word
 
@@ -81,6 +82,7 @@ def prepend(word):
 
     return result
 
+@cmd.add
 def repetition(word):
     """Repeat a charater in word
 
@@ -99,6 +101,7 @@ def repetition(word):
 
     return result
 
+@cmd.add
 def transposition(word):
     """Transpose (swap) two characers in word
 

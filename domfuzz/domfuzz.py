@@ -2,10 +2,14 @@
 
 import argparse
 import re
-from mutate import text as mutext
+import wordfuzz
 
-""" This regexp pattern is based on what is in the validators library
-    by Konsta Vesterinen (https://github.com/kvesteri/validators) """
+""" Domain name fuzzer
+"""
+
+
+# This regexp pattern is based on what is in the validators library
+# by Konsta Vesterinen (https://github.com/kvesteri/validators)
 domain_re = re.compile(
     r'^([a-zA-Z0-9][-_a-zA-Z0-9.]{0,61}[a-zA-Z0-9])+$'  # domain pt.3
     )
@@ -26,7 +30,8 @@ def invalidated(items):
 def gen_help(ap, name, description, functions):
     group = parser.add_argument_group(name, description)
     for func in functions:
-        group.add_argument('--{}'.format(func), dest='functions', action='append_const', const=func, help=functions[func].__doc__)
+        helpstring = functions[func].__doc__.splitlines()[0]
+        group.add_argument('--{}'.format(func), dest='functions', action='append_const', const=func, help=helpstring.lower())
 
 def process(text, mutators, functions):
     result = set()
@@ -36,30 +41,28 @@ def process(text, mutators, functions):
         result.update(mutators[func](text))
     return result
 
-parser = argparse.ArgumentParser(description='Generate valid permutations of a domain name')
+parser = argparse.ArgumentParser(description='Domain name fuzzer')
 parser.add_argument('domain', type=str)
+parser.add_argument('tld', type=str, nargs='?')
 parser.add_argument('-a', '--all', action='store_true', help='Run all mutator functions')
-gen_help(parser, 'Keyboard', 'Mutators based on keyboard layout', mutext.keyboard.functions)
-gen_help(parser, 'Noise', 'Mutators based on noise', mutext.noise.functions)
-gen_help(parser, 'Language', 'Mutators based on language constructs', mutext.language.functions)
-
-mutators = {}
-mutators.update(mutext.keyboard.functions)
-mutators.update(mutext.language.functions)
-mutators.update(mutext.noise.functions)
+gen_help(parser, 'Keyboard', 'Mutators based on keyboard layout', wordfuzz.keyboard.cmd.fuzzers)
+#gen_help(parser, 'Noise', 'Mutators based on noise', wordfuzz.noise.cmd.fuzzers)
+#gen_help(parser, 'Language', 'Mutators based on language constructs', wordfuzz.language.cmd.fuzzers)
 
 args = vars(parser.parse_args())
 if args['domain'] is None:
     parser.print_help()
     exit()
+if args['tld']:
+    tld = args['tld']
 if args['all']:
     args['functions'] = []
 
-result = process(args['domain'], mutators, args['functions'])
+result = process(args['domain'], wordfuzz.cmd.fuzzers, args['functions'])
 
 invalid_domains = invalidated(result)
 result.difference_update(invalid_domains)
 print("Generated {} valid domain name variations".format(len(result),len(invalid_domains)))
 
 for domain in sorted(result):
-    print("{}".format(domain.encode("idna")))
+    print("{}{}".format(domain.encode("idna"), tld))

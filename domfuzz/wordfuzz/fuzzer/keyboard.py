@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from .. import cmd
+
 # TODO Should spacebar be included?
 keyboard = {
     'qwerty': {
@@ -29,6 +31,7 @@ keyboard = {
         }
     }
 
+@cmd.add
 def addition(text, layouts=keyboard.keys()):
     """Insert adjacent key
 
@@ -56,6 +59,7 @@ def addition(text, layouts=keyboard.keys()):
 
     return result
 
+@cmd.add
 def replacement(text, layouts=['qwerty', 'azerty']):
     """Replace character with adjacent key
 
@@ -81,5 +85,3 @@ def replacement(text, layouts=['qwerty', 'azerty']):
                 result.add(text[:i] + c + text[i+1:])
 
     return result
-
-fuzzers = {"addition": addition, "replacement": replacement }
