@@ -61,37 +61,49 @@ def homograph(text, script=['latin']):
                 'j': u'\u03f3'  # 'ϳ'
                 },
             'latin': {
-                u'\u00e4': [u'\u00e2', u'\u00e3', u'\u0101', u'\u0103'], # 'ä', 'â', 'ã', 'ā', 'ă'
-                u'\u00e5': [u'\u00e0', u'\u00e1', u'\u0103'], # 'å', 'à', 'á'
-                u'\u00f6': [u'\u00f0', u'\u00f4', u'\u00f5', u'\u014d', u'\u014f', u'\u0151'], # 'ö', 'ð', 'ô', 'õ', 'ō', 'ŏ', 'ő'
-                'i': [u'\u00ec', u'\u00ed', u'\u00ee', u'\u00ef', u'\u0129'], # 'ì', 'í', 'î', 'ï', 'ĩ'
-                'a': u'\u0105', # 'ą'
+                u'\u00e4': [u'\u00e2', u'\u00e3', u'\u0101', u'\u0103', u'\u01df', u'\u0201', u'\u0203'], # 'ä', 'â', 'ã', 'ā', 'ă', 'ǟ', 'ȁ', 'ȃ'
+                u'\u00e5': [u'\u00e0', u'\u00e1', u'\u0103', u'\u01e1', u'\u01fb', u'\u0227'], # 'å', 'à', 'á', 'ǡ', 'ǻ', 'ȧ'
+                u'\u00f6': [u'\u00f0', u'\u00f4', u'\u00f5', u'\u014d', u'\u014f', u'\u0151', u'\u020d', u'\u020f'], # 'ö', 'ð', 'ô', 'õ', 'ō', 'ŏ', 'ő', 'ȍ', 'ȏ'
+                u'\u00f8': [u'\u01ff'], # 'ø', 'ǿ'
+                'i': [u'\u00ec', u'\u00ed', u'\u00ee', u'\u00ef', u'\u0129', u'\u013a'], # 'ì', 'í', 'î', 'ï', 'ĩ', 'ĺ'
+                'a': [u'\u0105', u'\u0227'], # 'ą', 'ȧ'
                 'c': [u'\u0109', u'\u010b'], # 'ĉ' 'ċ'
                 'd': [u'\u010f',  u'\u0111'], # 'ď', 'đ'
                 'e': [u'\u0117', u'\u0119'], # 'ė', 'ę'
                 'g': [u'\u011d', u'\u0121', u'\u0123'], # 'ĝ', 'ġ', 'ģ'
                 'j': [u'\u0135', u'\u013c'], # 'ĵ', 'ļ'
                 'k': [u'\u0137'], # 'ķ'
-                'l': [u'\u0137'], # 'ķ'
                 'l': [u'\u013a', u'\u013c', u'\u013e', u'\u0142'], # 'ĺ', 'ļ', 'ľ', 'ł'
                 'n': u'\u0146', # 'ņ'
                 'r': [u'\u0155', u'\u0157'], # 'ŕ', 'ŗ'
                 's': [u'\u015d', u'\u015f'], # 'ŝ', 'ş'
                 't': [u'\u0163', u'\u0165', u'\u0167'], # 'ţ', 'ť', 'ŧ'
-                'z': [u'\u017a', u'\u017c', u'\u017e']  # 'ź', 'ż', 'ž'
+                'z': [u'\u017a', u'\u017c', u'\u017e'], # 'ź', 'ż', 'ž'
+                'o': [u'\u00f8', u'\u01a1'], # 'ø', 'ơ'
+                'u': u'\u01b0', # 'ư'
+                'q': u'\u01eb', # 'ǫ'
+                'ae': [u'\u00e6', u'\u01fd'], # 'æ', 'ǽ'
+                'nj': u'\u014b', # 'ŋ'
+                'oe': u'\u0153', # 'œ'
+                'hu': u'\u0195', # 'ƕ'
+                'ur': u'\u01b0'  # 'ư'
                 }
             }
 
-    # TODO Include all permutations (multiple replacements)
-    # TODO Support double homoglyphs (example \u0133 'ĳ' or \u014b 'ŋ')
-    # TODO Support combinations (example hi -> 'ŀi')
     for i in range(0, len(text)):
         for name in script:
             if text[i] not in homoglyphs[name]:
                 continue
             for glyph in homoglyphs[name][text[i]]:
-                # DEBUG print("Name: {}, Glyph '{}' -> '{}'".format(name, text[i], glyph.encode('utf-8')))
                 result.add(text[:i] + glyph + text[i+1:])
+
+    # TODO Support combinations (example hi -> 'ŀi')
+    for i in range(0, len(text)-1):
+        for name in script:
+            if text[i:i+2] not in homoglyphs[name]:
+                continue
+            for glyph in homoglyphs[name][text[i:i+2]]:
+                result.add(text[:i] + glyph + text[i+2:])
     return result
 
 @cmd.add
