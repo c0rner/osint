@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
-from fuzzer import keyboard
-from fuzzer import noise
-from fuzzer import language
+import command
+import keyboard
+import language
+import noise

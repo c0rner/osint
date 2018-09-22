@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from .. import cmd
+import fuzzer
 
 # TODO Should spacebar be included?
 keyboard = {
@@ -31,7 +31,7 @@ keyboard = {
         }
     }
 
-@cmd.add
+@fuzzer.add
 def addition(text, layouts=keyboard.keys()):
     """Insert adjacent key
 
@@ -59,7 +59,7 @@ def addition(text, layouts=keyboard.keys()):
 
     return result
 
-@cmd.add
+@fuzzer.add
 def replacement(text, layouts=['qwerty', 'azerty']):
     """Replace character with adjacent key
 

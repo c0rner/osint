@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from .. import cmd
-
-@cmd.add
+import fuzzer
+@fuzzer.add
 def homograph(text, script=['latin']):
     """Replace a character with a homoglyph
 
@@ -106,7 +105,7 @@ def homograph(text, script=['latin']):
                 result.add(text[:i] + glyph + text[i+2:])
     return result
 
-@cmd.add
+@fuzzer.add
 def hyphenation(text):
     """Inserted hyphen
 
@@ -125,7 +124,7 @@ def hyphenation(text):
 
     return result
 
-@cmd.add
+@fuzzer.add
 def vowelswap(text):
     """Swap a vowel
 

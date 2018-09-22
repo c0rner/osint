@@ -1,21 +1,30 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-fuzzers = {}
+def main():
+    import argparse
+    import noise
+    import keyboard
+    import language
 
-def add(func, group=None):
-    global fuzzers
-    if func.__doc__ is not None:
-        func.help = func.__doc__.splitlines()[0]
+    parser = argparse.ArgumentParser(description='Generate text permutations')
+    parser.add_argument('text', type=str)
+    parser.add_argument('-k', '--kbd', action='store_true', help='Keyboard mutations')
+    parser.add_argument('-n', '--noise', action='store_true', help='Noise mutations')
+    parser.add_argument('-l', '--lang', action='store_true', help='Language mutations')
+    args = vars(parser.parse_args())
 
-    func.group = group
-    fuzzers[func.__name__] = func
-    return func
+    result = set()
+    word = args['text']
+    if args['kbd']:
+        result.update(keyboard.complete(word))
+    if args['lang']:
+        result.update(language.complete(word))
+    if args['noise']:
+        result.update(noise.complete(word))
 
-class ddfuzzer(object):
-    def __init__(self, help=None):
-        self.help = help
+    for r in result:
+        print(r.encode('utf-8'))
 
-    def __call__(self, func):
-        func.help = self.help
-        fuzzers[func.__name__] = func
-        return func
+if __name__ == '__main__':
+    main()
