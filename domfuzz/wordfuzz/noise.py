@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import fuzzer
+import arg
 
-@fuzzer.add
+@arg.add(desc="Append a-z to word")
 def append(word):
-    """Append a-z to word
-
+    """
     Generates all permutations of character a-z appended to `word`.
 
     Args:
@@ -23,10 +22,9 @@ def append(word):
 
     return result
 
-@fuzzer.add
+@arg.add(desc="Bitflip a character in word")
 def bitflip(word):
-    """Bitflip a character in word
-
+    """
     Generates all permutations of a single bitflipped characer of `word`.
 
     Args:
@@ -44,10 +42,9 @@ def bitflip(word):
             result.add(word[:i] + chr(flipped) + word[i+1:])
     return result
 
-@fuzzer.add
+@arg.add(desc="Omit a single character in word")
 def omission(word):
-    """Omit a single character in word
-
+    """
     Generates all permutaions of a single imotted character in `word`.
 
     Args:
@@ -63,10 +60,9 @@ def omission(word):
 
     return result
 
-@fuzzer.add
+@arg.add(desc="Prepend a-z to word")
 def prepend(word):
-    """Prepend a-z to word
-
+    """
     Generates all permutations of character a-z prepended to `word`.
 
     Args:
@@ -82,10 +78,9 @@ def prepend(word):
 
     return result
 
-@fuzzer.add
+@arg.add(desc="Repeat a character in word")
 def repetition(word):
-    """Repeat a charater in word
-
+    """
     Generates all permutations of a repeated character in `word`.
 
     Args:
@@ -101,10 +96,9 @@ def repetition(word):
 
     return result
 
-@fuzzer.add
+@arg.add(desc="Transpose (swap) two characters in word")
 def transposition(word):
-    """Transpose (swap) two characers in word
-
+    """
     Generates all permutations of two transposed characters in `word`.
 
     Args:

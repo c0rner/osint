@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import fuzzer
+import arg
 
 # TODO Should spacebar be included?
 keyboard = {
@@ -31,10 +31,9 @@ keyboard = {
         }
     }
 
-@fuzzer.add
+@arg.add(desc="Insert adjacent key")
 def addition(text, layouts=keyboard.keys()):
-    """Insert adjacent key
-
+    """
     Generate all permutations of an adjacent keystroke possbible when
     typing `word`.xi
     This is based on the selected keyboard layout(s).
@@ -59,10 +58,9 @@ def addition(text, layouts=keyboard.keys()):
 
     return result
 
-@fuzzer.add
+@arg.add(desc="Replace character with adjacent key")
 def replacement(text, layouts=['qwerty', 'azerty']):
-    """Replace character with adjacent key
-
+    """
     Generate all permutations of all possible adjacent key
     strokes when typing `word`.
     This is based on the selected keyboard layout(s).

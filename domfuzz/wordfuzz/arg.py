@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
-engines = {}
+methods = {}
 
-def add(func, group=None):
-    global fuzzers
-    if func.__doc__ is not None:
-        func.help = func.__doc__.splitlines()[0]
-
-    func.group = group
-    engines[func.__name__] = func
-    return func
+def add(desc=None, group=None):
+    def ret(func):
+        func.help = desc
+        func.group = group
+        methods[func.__name__] = func
+        return func
+    return ret

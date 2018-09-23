@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import fuzzer
-@fuzzer.add
-def homograph(text, script=['latin']):
-    """Replace a character with a homoglyph
+import arg
 
+@arg.add(desc="Replace a character with a homoglyph")
+def homograph(text, script=['latin']):
+    """
     Generates all permutations of a single replaced characer of `word`
     depending on the alphabet(s) selected.  
 
@@ -105,10 +105,9 @@ def homograph(text, script=['latin']):
                 result.add(text[:i] + glyph + text[i+2:])
     return result
 
-@fuzzer.add
+@arg.add(desc="Inserted hyphen")
 def hyphenation(text):
-    """Inserted hyphen
-
+    """
     Generate all permutations of a inserted hyphen in `word`.
 
     Args:
@@ -124,10 +123,9 @@ def hyphenation(text):
 
     return result
 
-@fuzzer.add
+@arg.add(desc="Swap a vowel")
 def vowelswap(text):
-    """Swap a vowel
-
+    """
     Generate all permutations of a swapped vowel in `word`.
 
     Args:

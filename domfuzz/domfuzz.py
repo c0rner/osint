@@ -24,8 +24,8 @@ def is_valid_label(label):
 def gen_help(ap, name, description, functions):
     group = parser.add_argument_group(name, description)
     for func in functions:
-        helpstring = functions[func].__doc__.splitlines()[0]
-        group.add_argument('--{}'.format(func), dest='functions', action='append_const', const=func, help=helpstring.lower())
+        helpstring = functions[func].help
+        group.add_argument('--{}'.format(func), dest='functions', action='append_const', const=func, help=helpstring.capitalize())
 
 def process(text, mutators, functions):
     result = {}
@@ -43,7 +43,7 @@ def set_default(obj):
 
 parser = argparse.ArgumentParser(description='Domain label fuzzer')
 parser.add_argument('label', type=str)
-gen_help(parser, 'Options', 'Word fuzzers', wordfuzz.fuzzer.engines)
+gen_help(parser, 'Options', 'Fuzzing methods', wordfuzz.arg.methods)
 #gen_help(parser, 'Keyboard', 'Mutators based on keyboard layout', wordfuzz.keyboard.cmd.fuzzers)
 #gen_help(parser, 'Noise', 'Mutators based on noise', wordfuzz.noise.cmd.fuzzers)
 #gen_help(parser, 'Language', 'Mutators based on language constructs', wordfuzz.language.cmd.fuzzers)
@@ -53,7 +53,7 @@ if args['label'] is None:
     parser.print_help()
     exit()
 
-fuzzed_output = process(args['label'].decode('utf8'), wordfuzz.fuzzer.engines, args['functions'])
+fuzzed_output = process(args['label'].decode('utf8'), wordfuzz.arg.methods, args['functions'])
 
 result = {}
 for fuzzer in fuzzed_output:
