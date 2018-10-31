@@ -20,7 +20,7 @@ tld_re = re.compile(
 
 def have_valid_labels(label):
     for l in label.split('.'):
-        if not label_re.match(l.encode('idna')):
+        if not label_re.match(l.encode('idna').decode('utf-8')):
             return False
     return True
 
@@ -53,7 +53,7 @@ if args['label'] is None or args['functions'] is None:
     parser.print_help()
     exit()
 
-fuzzed_output = process(args['label'].decode('utf8'), wordfuzz.arg.methods, args['functions'])
+fuzzed_output = process(args['label'], wordfuzz.arg.methods, args['functions'])
 
 result = {}
 for fuzzer in fuzzed_output:
@@ -64,4 +64,4 @@ for fuzzer in fuzzed_output:
         result[fuzzer][word] = {}
         result[fuzzer][word]['idna'] = word.encode("idna")
         result[fuzzer][word]['python'] = word.encode("unicode_escape")
-        print("{},{},{}".format(fuzzer, word.encode("idna"), word.encode("utf8")))
+        print("{},{},{}".format(fuzzer, word.encode("idna").decode('utf-8'), word))

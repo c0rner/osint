@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import arg
+from . import arg
 
 # TODO Should spacebar be included?
 keyboard = {

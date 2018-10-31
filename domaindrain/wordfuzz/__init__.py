@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import command
-import keyboard
-import language
-import noise
+from . import noise
+from . import keyboard
+from . import language

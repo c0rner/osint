@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import arg
+from . import arg
 
 @arg.add(desc="Replace a character with a homoglyph")
 def homograph(text, script=['latin']):

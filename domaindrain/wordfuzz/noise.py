@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import arg
+from . import arg
 
 @arg.add(desc="Append a-z to word")
 def append(word):
@@ -45,7 +45,7 @@ def bitflip(word):
 @arg.add(desc="Omit a single character in word")
 def omission(word):
     """
-    Generates all permutaions of a single imotted character in `word`.
+    Generates all permutaions of a single omitted character in `word`.
 
     Args:
         word: A single word
