@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
-from cmd import main
+"""wordfuzz CLI entry point."""
+from .cmd import main
 
 main()

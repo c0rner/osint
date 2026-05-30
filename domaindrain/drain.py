@@ -1,67 +1,69 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+"""Domain name fuzzer.
 
-import argparse
-import json
-import re
-import wordfuzz
-
-""" Domain name fuzzer
+Generates lookalike domain candidates from a given label and validates
+each candidate against RFC 1123 hostname rules via IDNA encoding.
 """
+import argparse
+import re
+import sys
+
+import wordfuzz.arg  # importing the package populates wordfuzz.arg.methods
+
+# RFC 1123 hostname label: starts and ends with alphanumeric, hyphens allowed
+# in the middle, max 63 characters.  Underscores are intentionally excluded.
+_LABEL_RE = re.compile(r'^[a-zA-Z0-9](?:[-a-zA-Z0-9]{0,61}[a-zA-Z0-9])?$')
 
 
-# This regexp pattern is based on what is in the validators library
-# by Konsta Vesterinen (https://github.com/kvesteri/validators)
-label_re = re.compile(
-    r'^([a-zA-Z0-9][-_a-zA-Z0-9]{0,61})$'
-    )
-tld_re = re.compile(
-    r'^([a-zA-Z]{2,13}|(xn--[a-zA-Z0-9]{2,30}))$'  # TLD
-    )
-
-def have_valid_labels(label):
-    for l in label.split('.'):
-        if not label_re.match(l.encode('idna').decode('utf-8')):
+def has_valid_labels(domain: str) -> bool:
+    """Return True if every label in *domain* is a valid RFC 1123 hostname label."""
+    for label in domain.split('.'):
+        try:
+            encoded = label.encode('idna').decode('ascii')
+        except (UnicodeError, UnicodeDecodeError):
+            return False
+        if not _LABEL_RE.match(encoded):
             return False
     return True
 
-def gen_help(ap, name, description, functions):
-    group = parser.add_argument_group(name, description)
-    for func in functions:
-        helpstring = functions[func].help
-        group.add_argument('--{}'.format(func), dest='functions', action='append_const', const=func, help=helpstring.capitalize())
 
-def process(text, mutators, functions):
-    result = {}
-    for func in functions:
-        if func not in mutators:
-            continue
-        result[func] = mutators[func](text)
-    return result
-
-def set_default(obj):
-    if isinstance(obj, set):
-        return list(obj)
-    raise TypeError
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description='Domain label fuzzer')
+    parser.add_argument('label', type=str)
+    group = parser.add_argument_group('Options', 'Fuzzing methods')
+    for name, func in wordfuzz.arg.methods.items():
+        help_text = (func.help or '').capitalize()
+        group.add_argument(f'--{name}', dest='functions', action='append_const',
+                           const=name, help=help_text)
+    return parser
 
 
-parser = argparse.ArgumentParser(description='Domain label fuzzer')
-parser.add_argument('label', type=str)
-gen_help(parser, 'Options', 'Fuzzing methods', wordfuzz.arg.methods)
+def process(text: str, functions: list[str]) -> dict[str, set[str]]:
+    """Run each requested mutator on *text* and return a mapping of name → results."""
+    return {
+        name: wordfuzz.arg.methods[name](text)
+        for name in functions
+        if name in wordfuzz.arg.methods
+    }
 
-args = vars(parser.parse_args())
-if args['label'] is None or args['functions'] is None:
-    parser.print_help()
-    exit()
 
-fuzzed_output = process(args['label'], wordfuzz.arg.methods, args['functions'])
+def main() -> None:
+    parser = build_parser()
+    args = vars(parser.parse_args())
+    if not args.get('functions'):
+        parser.print_help()
+        sys.exit(1)
 
-result = {}
-for fuzzer in fuzzed_output:
-    result[fuzzer] = {}
-    for word in fuzzed_output[fuzzer]:
-        if not have_valid_labels(word):
-            continue
-        result[fuzzer][word] = {}
-        result[fuzzer][word]['idna'] = word.encode("idna")
-        result[fuzzer][word]['python'] = word.encode("unicode_escape")
-        print("{},{},{}".format(fuzzer, word.encode("idna").decode('utf-8'), word))
+    for name, words in process(args['label'], args['functions']).items():
+        for word in sorted(words):
+            if not has_valid_labels(word):
+                continue
+            try:
+                idna = word.encode('idna').decode('ascii')
+            except UnicodeError:
+                continue
+            print(f'{name},{idna},{word}')
+
+
+if __name__ == '__main__':
+    main()

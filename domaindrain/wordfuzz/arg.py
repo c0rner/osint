@@ -1,9 +1,12 @@
-# -*- coding: utf-8 -*-
+"""Decorator-based function registry for fuzzing methods."""
+from collections.abc import Callable
 
-methods = {}
+methods: dict[str, Callable[..., set[str]]] = {}
 
-def add(desc=None, group=None):
-    def ret(func):
+
+def add(desc: str | None = None, group: str | None = None) -> Callable:
+    """Register a fuzzing function with an optional description and group."""
+    def ret(func: Callable) -> Callable:
         func.help = desc
         func.group = group
         methods[func.__name__] = func

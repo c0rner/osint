@@ -1,30 +1,45 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+"""Standalone CLI entry point for wordfuzz."""
+import argparse
 
-def main():
-    import argparse
-    import noise
-    import keyboard
-    import language
+from . import arg
+from . import noise      # noqa: F401 – registers noise methods
+from . import keyboard   # noqa: F401 – registers keyboard methods
+from . import language   # noqa: F401 – registers language methods
 
+# Map CLI group flags to the registered method names they cover.
+_GROUPS: dict[str, list[str]] = {
+    'kbd':   ['addition', 'replacement'],
+    'noise': ['append', 'bitflip', 'omission', 'prepend', 'repetition', 'transposition'],
+    'lang':  ['homograph', 'hyphenation', 'vowelswap'],
+}
+
+
+def main() -> None:
     parser = argparse.ArgumentParser(description='Generate text permutations')
     parser.add_argument('text', type=str)
-    parser.add_argument('-k', '--kbd', action='store_true', help='Keyboard mutations')
+    parser.add_argument('-k', '--kbd',   action='store_true', help='Keyboard mutations')
     parser.add_argument('-n', '--noise', action='store_true', help='Noise mutations')
-    parser.add_argument('-l', '--lang', action='store_true', help='Language mutations')
+    parser.add_argument('-l', '--lang',  action='store_true', help='Language mutations')
     args = vars(parser.parse_args())
 
-    result = set()
-    word = args['text']
-    if args['kbd']:
-        result.update(keyboard.complete(word))
-    if args['lang']:
-        result.update(language.complete(word))
-    if args['noise']:
-        result.update(noise.complete(word))
+    selected: list[str] = []
+    for flag, methods in _GROUPS.items():
+        if args[flag]:
+            selected.extend(methods)
 
-    for r in result:
-        print(r.encode('utf-8'))
+    if not selected:
+        parser.print_help()
+        return
+
+    result: set[str] = set()
+    word: str = args['text']
+    for name in selected:
+        if name in arg.methods:
+            result.update(arg.methods[name](word))
+
+    for r in sorted(result):
+        print(r)
+
 
 if __name__ == '__main__':
     main()

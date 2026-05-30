@@ -1,10 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
+"""Keyboard-layout-based text mutation functions."""
 from . import arg
 
 # TODO Should spacebar be included?
-keyboard = {
+keyboard: dict[str, dict[str, str]] = {
     'qwerty': {
         '1': '2q',   '2': '3wq1',   '3': '4ew2',   '4': '5re3',   '5': '6tr4',   '6': '7yt5',   '7': '8uy6',   '8': '9iu7',   '9': '0oi8',   '0': 'po9',
         'q': '12wa', 'w': '23esaq', 'e': '34rdsw', 'r': '45tfde', 't': '56ygfr', 'y': '67uhgt', 'u': '78ijhy', 'i': '89okju', 'o': '90plki', 'p': '0lo',
@@ -32,54 +30,55 @@ keyboard = {
     }
 
 @arg.add(desc="Insert adjacent key")
-def addition(text, layouts=keyboard.keys()):
+def addition(text: str, layouts: list[str] | None = None) -> set[str]:
     """
-    Generate all permutations of an adjacent keystroke possbible when
-    typing `word`.xi
-    This is based on the selected keyboard layout(s).
+    Generate all permutations of an adjacent keystroke possible when
+    typing *text*, based on the selected keyboard layout(s).
 
     Args:
-        word: A single word
+        text: A single word
         layouts: A list of the targeted keyboard layouts
 
     Returns:
         A set of all possible permutations
     """
-    result = set()
+    if layouts is None:
+        layouts = list(keyboard.keys())
 
+    result: set[str] = set()
     text = text.lower()
     for layout in layouts:
-        for i in range(0, len(text)):
-            if text[i] not in keyboard[layout]:
+        for i, ch in enumerate(text):
+            if ch not in keyboard[layout]:
                 continue
-            for c in keyboard[layout][text[i]]:
+            for c in keyboard[layout][ch]:
                 result.add(text[:i] + c + text[i:])
-                result.add(text[:i+1] + c + text[i+1:])
-
+                result.add(text[:i + 1] + c + text[i + 1:])
     return result
 
+
 @arg.add(desc="Replace character with adjacent key")
-def replacement(text, layouts=['qwerty', 'azerty']):
+def replacement(text: str, layouts: list[str] | None = None) -> set[str]:
     """
-    Generate all permutations of all possible adjacent key
-    strokes when typing `word`.
-    This is based on the selected keyboard layout(s).
+    Generate all permutations of all possible adjacent key strokes when
+    typing *text*, based on the selected keyboard layout(s).
 
     Args:
-        word: A single word
+        text: A single word
         layouts: A list of the targeted keyboard layouts
 
     Returns:
         A set of all possible permutations
     """
-    result = set()
+    if layouts is None:
+        layouts = ['qwerty', 'azerty']
 
+    result: set[str] = set()
     for layout in layouts:
-        for i in range(0, len(text)):
-            if text[i] not in keyboard[layout]:
+        for i, ch in enumerate(text):
+            if ch not in keyboard[layout]:
                 continue
-            for c in keyboard[layout][text[i]]:
+            for c in keyboard[layout][ch]:
                 # TODO Consider duplicate characters (tt, ll, ss, ...)
-                result.add(text[:i] + c + text[i+1:])
-
+                result.add(text[:i] + c + text[i + 1:])
     return result
